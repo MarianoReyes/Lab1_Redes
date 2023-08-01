@@ -2,27 +2,28 @@ import crcmod.predefined
 
 
 def crc_encode(message):
-    # Creamos un generador de CRC-32 con el algoritmo específico
     crc32 = crcmod.predefined.Crc('crc-32')
+    crc_value = crc32.new(message.encode()).digest()
 
-    # Calculamos el valor CRC del mensaje
-    crc_value = crc32.new(message.encode()).hexdigest()
+    # Convertir el valor CRC en un número entero
+    crc_int = int.from_bytes(crc_value, byteorder='big')
 
-    # Combinamos el mensaje original con el valor CRC
-    encoded_message = message + crc_value
+    # Obtener los 3 bits menos significativos del valor CRC
+    crc_bits = bin(crc_int & 0b111).replace('0b', '').zfill(3)
 
+    encoded_message = message + crc_bits
     return encoded_message
 
 
 def main():
-    # Paso 1: Solicitar una trama en binario
     binary_message = input("Ingrese una trama en binario (p.ej. 110101): ")
-
-    # Paso 2: Calcular el CRC-32
     encoded_message = crc_encode(binary_message)
 
-    # Paso 3: Devolver el mensaje en binario concatenado con el CRC-32
-    print("Mensaje codificado:", encoded_message)
+    # Guardar la respuesta en un archivo de texto
+    with open("respuesta.txt", "w") as file:
+        file.write(encoded_message)
+
+    print("Mensaje codificado guardado en 'respuesta.txt'.")
 
 
 if __name__ == "__main__":
