@@ -1,3 +1,0 @@
-Trama modificada: 110101B9BFA552
-Trama original: 110101
-Valor CRC-32: B9BFA552
