@@ -43,5 +43,5 @@ dato = hamming_codificar(datos)
 print("Mensaje codificado: ", dato)
 
 # Guardar en un archivo de texto
-with open("respuesta.txt", "w") as file:
+with open("./hamming/respuesta.txt", "w") as file:
     file.write(dato)
