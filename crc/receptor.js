@@ -51,18 +51,27 @@ function crc_simplified(data) {
     } else {
       // Caso: Se detectaron errores
       // Intentar corregir errores invirtiendo el bit que está en la posición de los bits de paridad (crc)
-      const errorPosition = parseInt(crc.join(''), 2);
-      if (errorPosition >= 0 && errorPosition < data.length) {
-        const correctedMessage = data.slice(0, errorPosition) + (1 - parseInt(data[errorPosition])) + data.slice(errorPosition + 1);
-        return `Trama corregida: ${correctedMessage}`;
+      const errorPosition = encodedMessage.length - 3;
+      if (errorPosition >= 0 && errorPosition < encodedMessage.length) {
+        const correctedMessage = encodedMessage.slice(0, errorPosition) + (1 - parseInt(encodedMessage[errorPosition])) + encodedMessage.slice(errorPosition + 1);
+  
+        // Calcular el nuevo CRC del mensaje corregido
+        const correctedResult = crc_simplified(correctedMessage);
+        if (correctedResult.valid) {
+          return `Trama corregida: ${correctedMessage}`;
+        } else {
+          return `Trama descartada por detectar errores.`;
+        }
       } else {
         return result.message; // Si la posición de error está fuera del rango, simplemente se descarta la trama.
       }
     }
   }
   
+  
+  
  // Obtener el mensaje desde el archivo
-const filePath = 'crc/inputMessage.txt';
+const filePath = 'crc/trama_codificada.txt';
 const inputMessageFromFile = readInputMessageFromFile(filePath);
 
 if (inputMessageFromFile) {

@@ -25,9 +25,9 @@ input_data = input("Ingresa una trama ej: 11010011101100\n>>")
 output_data = crc_simplified(input_data)
 
 # Guardar el resultado en un archivo
-with open("crc/inputMessage.txt", "w") as file:
+with open("crc/trama_codificada.txt", "w") as file:
     file.write(output_data)
 
 print("Mensaje original + CRC:", output_data)
-print("El resultado se ha guardado en el archivo inputMessage.txt")
+print("El resultado se ha guardado en el archivo trama_codificada.txt")
 
