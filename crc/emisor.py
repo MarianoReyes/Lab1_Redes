@@ -21,7 +21,7 @@ def crc_simplified(data):
     return data + crc_result
 
 # Ejemplo de uso:
-input_data = input("Ingresa una trama ej: 11010011101100\n>>")
+input_data = input("Ingresa una trama ej: 11010011101100\n>> ")
 output_data = crc_simplified(input_data)
 
 # Guardar el resultado en un archivo
