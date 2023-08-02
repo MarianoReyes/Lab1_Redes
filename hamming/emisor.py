@@ -1,14 +1,3 @@
-def calcular_paridad(bits, pos):
-    j = pos - 1
-    longitud = len(bits)
-    paridad = 0
-    while j < longitud:
-        for i in range(0, pos):
-            if j + i < longitud:
-                paridad ^= int(bits[j + i])
-        j += 2 * pos
-    return paridad
-
 
 def hamming_codificar(datos):
     n = len(datos)
@@ -16,17 +5,35 @@ def hamming_codificar(datos):
     while (n + r + 1) > pow(2, r):
         r += 1
     arr = ['0'] * (n + r)
+    print("DATA: ", n, " PARIDAD: ", r, " TOTAL: ", n + r)
+    print("ARRAY", arr)
+
     j = 0
-    for i in range(1, n + r + 1):
-        if i != pow(2, j):
-            arr[i - 1] = datos[-1]
-            datos = datos[:-1]
-        else:
+    k = 1
+    for i in range(0, n + r):
+        if i == (pow(2, j) - 1):
+            arr[i] = 'P'
             j += 1
-    for i in range(0, len(arr) // 2):
-        arr[i] = str(calcular_paridad(arr, pow(2, i)))
-    for i in range(len(arr) // 2, len(arr)):
-        arr[i] = str(calcular_paridad(arr, pow(2, i - len(arr) // 2)))
+        else:
+            arr[i] = datos[k - 1]
+            k += 1
+    print("ARRAY", arr)
+    # Calcular los bits de paridad
+    for i in range(0, r):
+        paridad = 0
+        for j in range(0, n + r):
+            if arr[j] == 'P':
+                continue
+            elif (j + 1) & (1 << i):
+                if arr[j] == '1':
+                    paridad = paridad ^ 1
+        for paridades in range(r):
+            if paridad == paridades + 1:
+                arr[pow(2, i) - 1] = '1'
+                break
+            else:
+                arr[pow(2, i) - 1] = '0'
+    print("ARRAY", arr)
     return ''.join(arr)
 
 
@@ -36,5 +43,5 @@ dato = hamming_codificar(datos)
 print("Mensaje codificado: ", dato)
 
 # Guardar en un archivo de texto
-with open("respuesta.txt", "w") as file:
+with open("./hamming/respuesta.txt", "w") as file:
     file.write(dato)
