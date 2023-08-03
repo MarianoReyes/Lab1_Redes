@@ -21,7 +21,7 @@ function detectError(arr, nr) {
     return res;
 }
 
-fs.readFile('./hamming/respuesta.txt', 'utf8' , (err, data) => {
+fs.readFile('./respuesta.txt', 'utf8' , (err, data) => {
     if (err) {
         console.error(err);
         return;
@@ -56,7 +56,7 @@ fs.readFile('./hamming/respuesta.txt', 'utf8' , (err, data) => {
         const CorrectedBit = receivedData[errorPosition - 1] === "0" ? "1" : "0";
         const CorrectedData = receivedData.substr(0, errorPosition - 1) + CorrectedBit + receivedData.substr(errorPosition);
 
-        console.log("Corrected data: " + receivedData,CorrectedData);
+        console.log("Corrected data: " +CorrectedData);
         // Extraer los bits de datos corregidos (omitir los bits de paridad)
         let correctedData = "";
         const Lis_position_pariedad = [1,2,4,8,16,32,64,128,256,512,1024,2048]

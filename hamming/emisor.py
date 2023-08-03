@@ -5,8 +5,8 @@ def hamming_codificar(datos):
     while (n + r + 1) > pow(2, r):
         r += 1
     arr = ['0'] * (n + r)
-    print("DATA: ", n, " PARIDAD: ", r, " TOTAL: ", n + r)
-    print("ARRAY", arr)
+    # print("DATA: ", n, " PARIDAD: ", r, " TOTAL: ", n + r)
+    # print("ARRAY", arr)
 
     j = 0
     k = 1
@@ -17,7 +17,7 @@ def hamming_codificar(datos):
         else:
             arr[i] = datos[k - 1]
             k += 1
-    print("ARRAY", arr)
+    # print("ARRAY", arr)
     # Calcular los bits de paridad
     for i in range(0, r):
         paridad = 0
@@ -33,7 +33,7 @@ def hamming_codificar(datos):
                 break
             else:
                 arr[pow(2, i) - 1] = '0'
-    print("ARRAY", arr)
+    # print("ARRAY", arr)
     return ''.join(arr)
 
 
@@ -43,5 +43,5 @@ dato = hamming_codificar(datos)
 print("Mensaje codificado: ", dato)
 
 # Guardar en un archivo de texto
-with open("./hamming/respuesta.txt", "w") as file:
+with open("./respuesta.txt", "w") as file:
     file.write(dato)
