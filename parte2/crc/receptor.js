@@ -16,7 +16,7 @@ const server = net.createServer((socket) => {
             const mensajeDecodificado = decodificarMensaje(mensajeBinario);
             mostrarMensaje(mensajeDecodificado);
         } else {
-            console.log("Error de integridad detectado en la trama recibida.");
+            console.log("Error de integridad/ruido detectado en la trama recibida.");
         }
     });
 });
