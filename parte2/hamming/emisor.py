@@ -65,11 +65,11 @@ def aplicar_ruido(trama):
 
 def enviar_informacion(trama_con_ruido):
     HOST = 'localhost'
-    PORT = 8080
+    PORT = 4000
     print("Enviando trama codificada: ", trama_con_ruido)
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
-        s.sendall(trama_con_ruido.encode())
+        s.sendall(trama_con_ruido)
 
 
 mensaje = solicitar_mensaje()
