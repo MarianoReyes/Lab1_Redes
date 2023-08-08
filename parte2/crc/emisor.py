@@ -46,4 +46,4 @@ mensaje_codificado = codificar_mensaje(mensaje)
 integridad = calcular_integridad(mensaje_codificado)
 trama = mensaje_codificado + integridad
 trama_con_ruido = aplicar_ruido(trama)
-enviar_informacion(trama_con_ruido)
+enviar_informacion(trama)
