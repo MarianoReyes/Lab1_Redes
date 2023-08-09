@@ -1,4 +1,16 @@
-const net = require('net')
+const http = require('http');
+const socketIo = require('socket.io');
+
+
+function bits_to_string(bits) {
+    let result = '';
+    for(let i = 0; i < bits.length; i += 8) {
+        let byte = bits.substring(i, i + 8);
+        let charCode = parseInt(byte, 2);
+        result += String.fromCharCode(charCode);
+    }
+    return result;
+}
 
 const detectError = (arr,nr) =>{
     let n = arr.length
@@ -34,24 +46,34 @@ const obtenerParidad = (arr) => {
     return r
 }
 
-const server = net.createServer((socket) => {
-    let receivedData = ""
+const server = http.createServer();
+const io = socketIo(server);
 
-    socket.on('data', (data) => {
-        receivedData += data.toString()
-    })
+io.on('connection', (socket) => {
+    // let receivedData = "";
 
-    socket.on('end', () => {
-        const r = obtenerParidad(receivedData)
-        const errorPosition = detectError(receivedData, r)
+    // socket.on('data', (data) => {
+    //     console.log("Data received: " + data.toString())
+    //     receivedData += data.toString();
+    // })
+
+    socket.on('end', (receivedData) => {
+        console.log("Data received: " + receivedData)
+        const r = obtenerParidad(receivedData);
+        const errorPosition = detectError(receivedData, r);
         if(errorPosition === 0) {
             let originalData = ""
+            const posiblepos = [1,2,4,8,16,32,64,128,256,512,1024,2048]
             for(let i = 0; i < receivedData.length; i++) {
-                if(i !== Math.pow(2, 0) - 1 && i !== Math.pow(2, 1) - 1 && i !== Math.pow(2, 2) - 1) {
+
+                if (posiblepos.includes(i+1)) {
+                    continue
+                }else if(i !== Math.pow(2, 0) - 1 && i !== Math.pow(2, 1) - 1 && i !== Math.pow(2, 2) - 1) {
                     originalData += receivedData[i]
                 }
             }
-            mostrarMensaje(originalData)
+            const decodificado = bits_to_string(originalData)
+            mostrarMensaje(decodificado)
         } else {
             console.log("Error is found at position: " + errorPosition)
             // Si hay un error, corregir el error
@@ -71,7 +93,6 @@ const server = net.createServer((socket) => {
         }
     })
 })
-
 
 function mostrarMensaje(mensaje) {
     console.log("Mensaje recibido y verificado:", mensaje)

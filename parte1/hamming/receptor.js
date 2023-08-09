@@ -45,7 +45,7 @@ fs.readFile('./respuesta.txt', 'utf8' , (err, data) => {
         console.log("No error is found");
         let originalData = "";
         for(let i = 0; i < receivedData.length; i++) {
-            if(i !== Math.pow(2, 0) - 1 && i !== Math.pow(2, 1) - 1 && i !== Math.pow(2, 2) - 1) {
+            if(i !== Math.pow(2, 0) - 1 && i !== Math.pow(2, 1) - 1 && i !== Math.pow(2, 2) - 1 && i !== Math.pow(2, 3) - 1 && i !== Math.pow(2, 4) - 1 && i !== Math.pow(2, 5) - 1 && i !== Math.pow(2, 6) - 1 && i !== Math.pow(2, 7) - 1 && i !== Math.pow(2, 8) - 1 && i !== Math.pow(2, 9) - 1 && i !== Math.pow(2, 10) - 1 && i !== Math.pow(2, 11) - 1) {
                 originalData += receivedData[i];
             }
         }

@@ -1,4 +1,4 @@
-import socket
+import socketio
 import random
 
 
@@ -7,13 +7,12 @@ def solicitar_mensaje():
     return mensaje
 
 
-def codificar_mensaje(mensaje):
-    mensaje_codificado = ""
-    for char in mensaje:
-        ascii_code = ord(char)
-        binary_code = bin(ascii_code)[2:].zfill(8)
-        mensaje_codificado += binary_code
-    return mensaje_codificado
+def string_to_bits(s):
+    result = ''
+    for char in s:
+        binary = bin(ord(char))[2:]
+        result += binary.zfill(8)
+    return result
 
 
 def hamming_codificar(datos):
@@ -63,18 +62,32 @@ def aplicar_ruido(trama):
     return trama_con_ruido
 
 
-def enviar_informacion(trama_con_ruido):
-    HOST = 'localhost'
-    PORT = 4000
-    print("Enviando trama codificada: ", trama_con_ruido)
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST, PORT))
-        s.sendall(trama_con_ruido)
+# def enviar_informacion(trama_con_ruido):
+#     HOST = 'localhost'
+#     PORT = 4000
+#     print("Enviando trama codificada: ", trama_con_ruido)
+#     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+#         s.connect((HOST, PORT))
+#         s.sendall(trama_con_ruido)
 
 
 mensaje = solicitar_mensaje()
-mensaje_codificado = codificar_mensaje(mensaje)
-print(mensaje_codificado)
+mensaje_codificado = string_to_bits(mensaje)
 trama = hamming_codificar(mensaje_codificado)
+print(trama)
 trama_con_ruido = aplicar_ruido(trama)
-enviar_informacion(trama_con_ruido)
+# enviar_informacion(trama_con_ruido)
+sio = socketio.Client()
+
+
+@sio.on('connect')
+def on_connect():
+    print('Conectado al receptor')
+    # Aquí puedes enviar la trama
+    # sio.emit('data', trama)
+    sio.emit('end', trama)
+    print('Trama enviada')
+    sio.disconnect()
+
+
+sio.connect('http://localhost:4000')
