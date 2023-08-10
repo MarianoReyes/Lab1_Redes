@@ -27,7 +27,7 @@ def main():
     resultados = []
 
     batch_size = 100  # Número de conexiones simultáneas en cada iteración
-    total_iterations = 100
+    total_iterations = 10000
 
     for probabilidad_error in probabilidad_error_list:
         resultados_prob = []
