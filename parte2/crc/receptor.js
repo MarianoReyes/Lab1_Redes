@@ -49,6 +49,6 @@ function mostrarMensaje(mensaje) {
     console.log("Mensaje recibido y verificado:", mensaje);
 }
 
-server.listen(8080, 'localhost', () => {
-    console.log('Receptor escuchando en el puerto 8080');
+server.listen(8081, 'localhost', () => {
+    console.log('Receptor escuchando en el puerto 8081');
 });

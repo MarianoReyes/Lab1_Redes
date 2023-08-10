@@ -23,10 +23,10 @@ def calcular_integridad(mensaje_binario):
     return crc32_binary
 
 
-def aplicar_ruido(trama):
+def aplicar_ruido(trama, probabilidad):
     trama_con_ruido = ""
     for bit in trama:
-        if random.random() < 0.01:  # Probabilidad de error del 1%
+        if random.random() < probabilidad:  # Probabilidad de error del 1%
             bit = "1" if bit == "0" else "0"
         trama_con_ruido += bit
     return trama_con_ruido
@@ -34,7 +34,7 @@ def aplicar_ruido(trama):
 
 def enviar_informacion(trama_con_ruido):
     HOST = 'localhost'
-    PORT = 8080
+    PORT = 8081
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
@@ -45,5 +45,5 @@ mensaje = solicitar_mensaje()
 mensaje_codificado = codificar_mensaje(mensaje)
 integridad = calcular_integridad(mensaje_codificado)
 trama = mensaje_codificado + integridad
-trama_con_ruido = aplicar_ruido(trama)
+trama_con_ruido = aplicar_ruido(trama, 0.01)
 enviar_informacion(trama)
