@@ -60,6 +60,8 @@ io.on('connection', (socket) => {
     socket.on('trama_con_ruido',(data) => {
     
         const receivedData = data.trama
+        const datanLen = data.tamano
+        const realdata = data.og
         const r = obtenerParidad(receivedData)
         const errorPosition = detectError(receivedData, r)
         if(errorPosition === 0) {
@@ -75,7 +77,7 @@ io.on('connection', (socket) => {
             }
             const decodificado = bits_to_string(originalData)
             mostrarMensaje(decodificado)
-            socket.emit('trama_decodificada',{decode:decodificado,trama:originalData})
+            socket.emit('trama_decodificada',{decode:decodificado,trama:originalData,tamano:datanLen,og:realdata},)
         } else {
             console.log("Error is found at position: " + errorPosition)
             // Si hay un error, corregir el error
@@ -94,7 +96,7 @@ io.on('connection', (socket) => {
             console.log("Extracted data bits: " + correctedData)
             const decodificado = bits_to_string(correctedData)
             mostrarMensaje(decodificado)
-            socket.emit('trama_decodificada',{decode:decodificado,trama:correctedData})
+            socket.emit('trama_decodificada',{decode:decodificado,trama:correctedData,tamano:datanLen,og:realdata})
         }
     })
 

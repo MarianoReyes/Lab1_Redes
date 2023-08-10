@@ -1,10 +1,19 @@
 import random
 import matplotlib.pyplot as plt
 import socketio
+import string
 
 
 def generar_cadena(tamano):
     return ''.join([str(random.randint(0, 1)) for _ in range(tamano)])
+
+
+def string_to_bits(s):
+    result = ''
+    for char in s:
+        binary = bin(ord(char))[2:]
+        result += binary.zfill(8)
+    return result
 
 
 def hamming_codificar(datos):
@@ -71,7 +80,9 @@ trama_decodificada = None
 def on_trama_decodificada(data):
     # Aquí puedes manejar la trama decodificada
     trama_decodificada = data['trama']
-    error_count = sum(1 for a, b in zip(trama, trama_decodificada) if a != b)
+    tamano = data['tamano']
+    real = data['og']
+    error_count = sum(1 for a, b in zip(real, trama_decodificada) if a != b)
     error_rate = error_count / len(trama)
     resultados.append((tamano, probabilidad, error_rate))
     print("Trama decodificada:", trama_decodificada)
@@ -84,32 +95,51 @@ sio.connect('http://localhost:4000')
 resultados = []
 
 # Parámetros de prueba
-tamanos_cadena = [100, 1000, 10000]
+tamanos_cadena = [5, 10, 20]
 probabilidades_error = [0, 0.01, 0.05, 0.1]
+total_iteraciones = 10000
+
+
+def generar_palabra_aleatoria(length):
+    letters = string.ascii_letters
+    return ''.join(random.choice(letters) for _ in range(length))
+
 
 # Bucle para ejecutar pruebas
-for tamano in tamanos_cadena:
-    for probabilidad in probabilidades_error:
+for probabilidad in probabilidades_error:
+    for _ in range(total_iteraciones):
         # Generar una cadena aleatoria
-        cadena = generar_cadena(tamano)
-        
-        # Aplicar algoritmo de Hamming
-        trama = hamming_codificar(cadena)
+        lend = random.randint(10, 30)
+        cadena = generar_palabra_aleatoria(lend)
+        mensaje_codificado = string_to_bits(cadena)
+        trama = hamming_codificar(mensaje_codificado)
         trama_con_ruido = aplicar_ruido(trama, probabilidad)
         
         # Enviar trama con ruido al receptor
-        sio.emit('trama_con_ruido', {'trama': trama_con_ruido})
+        sio.emit('trama_con_ruido', {'trama': trama_con_ruido, 'tamano': lend,
+                                     'og': mensaje_codificado})
         # esperar 2 segudnos
-        sio.sleep(2)
-        # Aquí puedes incluir la lógica para procesar la trama decodificada
-        # trama_decodificada = trama # Esto debería ser reemplazado por la trama decodificada que recibes del servidor
+        sio.sleep(0.01)
 
+# Ordenar los resultados por tamaño
+resultados_ordenados = sorted(resultados, key=lambda x: x[0])
+
+# Crear gráficos con matplotlib
+for probabilidad in probabilidades_error:
+    x = [res[0] for res in resultados_ordenados if res[1] == probabilidad]
+    y = [res[2] for res in resultados_ordenados if res[1] == probabilidad]
+    plt.plot(x, y, label=f'Probabilidad: {probabilidad}')
+
+plt.xlabel('Tamaño de Cadena')
+plt.ylabel('Tasa de Error')
+plt.legend()
+plt.show()
 
 # Crear gráficos con matplotlib
 for probabilidad in probabilidades_error:
     x = [res[0] for res in resultados if res[1] == probabilidad]
     y = [res[2] for res in resultados if res[1] == probabilidad]
-    plt.plot(x, y, label=f'Probabilidad: {probabilidad}')
+    plt.scatter(x, y, label=f'Probabilidad: {probabilidad}')
 
 plt.xlabel('Tamaño de Cadena')
 plt.ylabel('Tasa de Error')

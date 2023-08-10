@@ -80,7 +80,7 @@ io.on('connection', (socket) => {
             const CorrectedBit = receivedData[errorPosition - 1] === "0" ? "1" : "0"
             const CorrectedData = receivedData.substr(0, errorPosition - 1) + CorrectedBit + receivedData.substr(errorPosition)
     
-            console.log("Corrected data: " +CorrectedData)
+            // console.log("Corrected data: " +CorrectedData)
             // Extraer los bits de datos corregidos (omitir los bits de paridad)
             let correctedData = ""
             const Lis_position_pariedad = [1,2,4,8,16,32,64,128,256,512,1024,2048]
@@ -89,7 +89,9 @@ io.on('connection', (socket) => {
                     correctedData += CorrectedData[i]
                 }
             }
-            console.log("Extracted data bits: " + correctedData)
+            // console.log("Extracted data bits: " + correctedData)
+            const decodificado = bits_to_string(correctedData)
+            mostrarMensaje(decodificado)
         }
     })
 })

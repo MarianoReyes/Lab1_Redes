@@ -76,16 +76,13 @@ mensaje_codificado = string_to_bits(mensaje)
 trama = hamming_codificar(mensaje_codificado)
 print(trama)
 trama_con_ruido = aplicar_ruido(trama)
-# enviar_informacion(trama_con_ruido)
 sio = socketio.Client()
 
 
 @sio.on('connect')
 def on_connect():
     print('Conectado al receptor')
-    # Aquí puedes enviar la trama
-    # sio.emit('data', trama)
-    sio.emit('end', trama)
+    sio.emit('end', trama_con_ruido)
     print('Trama enviada')
     sio.disconnect()
 
